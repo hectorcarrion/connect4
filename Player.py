@@ -6,6 +6,93 @@ class AIPlayer:
         self.type = 'ai'
         self.player_string = 'Player {}:ai'.format(player_number)
 
+    class Board(np.ndarray):
+        """
+        A new board class that allows us to have nice methods into important
+        functionality wrapping the numpy class.
+        INPUTS:
+        board - a numpy array containing the state of the board using the
+                following encoding:
+                - the board maintains its same two dimensions
+                    - row 0 is the top of the board and so is
+                      the last row filled
+                - spaces that are unoccupied are marked as 0
+                - spaces that are occupied by player 1 have a 1 in them
+                - spaces that are occupied by player 2 have a 2 in them
+        """
+
+        def __new__(cls, a):
+            obj = np.asarray(a).view(cls)
+            return obj
+
+        def owner_at(self, row, col):
+            # Given the encoding above
+            if self[row][col] == 0:
+                return None
+            elif self[row][col] == 1:
+                return "player_one"
+            elif self[row][col] == 2:
+                return "player_two"
+
+        def possible_moves(self):
+            possible_moves = []
+            # Iterates the boards columns from left to right
+            for col in range(self.shape[1]):
+                # Iterates the boards rows from bottom to top
+                for row in range(self.shape[0], -1, -1):
+                    # Check that this space has no owner
+                    if board.owner_at(row, col) is None:
+                        possible_moves.append((row, col))
+                        # we break here because rows empty above this one
+                        # are not valid moves (cant place a disc on nothing)
+                        break
+            return possible_moves
+
+        def connected_components(self):
+            # A possible heuristic
+
+
+    def unoccupied(self, board, row, col):
+        """
+        Given a space on the board, return if this space is empty or not
+
+        INPUTS:
+        board - a numpy array containing the state of the board using the
+                following encoding:
+                - the board maintains its same two dimensions
+                    - row 0 is the top of the board and so is
+                      the last row filled
+                - spaces that are unoccupied are marked as 0
+                - spaces that are occupied by player 1 have a 1 in them
+                - spaces that are occupied by player 2 have a 2 in them
+        row - (int) the row position to check
+        col - (int) the col position to check
+
+        RETURNS:
+        unoccupied - a bloean True if empty flase if filled
+        """
+
+
+
+
+    def moves(self, board):
+        """
+        Given the current state of the board, return a list of moves
+
+        INPUTS:
+        board - a numpy array containing the state of the board using the
+                following encoding:
+                - the board maintains its same two dimensions
+                    - row 0 is the top of the board and so is
+                      the last row filled
+                - spaces that are unoccupied are marked as 0
+                - spaces that are occupied by player 1 have a 1 in them
+                - spaces that are occupied by player 2 have a 2 in them
+        RETURNS:
+        moves - a list of row, col spaces in which we can make a valid move
+        """
+
+
     def get_alpha_beta_move(self, board):
         """
         Given the current state of the board, return the next move based on
@@ -56,9 +143,9 @@ class AIPlayer:
 
     def evaluation_function(self, board):
         """
-        Given the current stat of the board, return the scalar value that 
+        Given the current stat of the board, return the scalar value that
         represents the evaluation function for the current player
-       
+
         INPUTS:
         board - a numpy array containing the state of the board using the
                 following encoding:
@@ -72,8 +159,8 @@ class AIPlayer:
         RETURNS:
         The utility value for the current board
         """
-       
-       
+
+
         return 0
 
 
@@ -145,4 +232,3 @@ class HumanPlayer:
             move = int(input('Enter your move: '))
 
         return move
-
