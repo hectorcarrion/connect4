@@ -39,22 +39,83 @@ class AIPlayer:
             # Iterates the boards columns from left to right
             for col in range(self.shape[1]):
                 # Iterates the boards rows from bottom to top
-                for row in range(self.shape[0], -1, -1):
+                for row in range(self.shape[0]-1, -1, -1):
                     # Check that this space has no owner
-                    if board.owner_at(row, col) is None:
+                    if self.owner_at(row, col) is None:
                         possible_moves.append((row, col))
                         # we break here because rows empty above this one
                         # are not valid moves (cant place a disc on nothing)
                         break
             return possible_moves
 
-        def connected_components(self):
-            # A possible heuristic
+        def count_series(self, line, player):
+            # Counts the size and number of connected components in a board
+            count = 0
+            connected_magnitudes = []
+
+            for disc in line:
+                if disc != player:
+                    if count <= 1:
+                        count = 0
+                    else:
+                        connected_magnitudes.append(count)
+                        count = 0
+                else:
+                    count += 1
+            if count > 1:
+                connected_magnitudes.append(count)
+            return connected_magnitudes
+
+        def calculate_score(self, line, player):
+            # Determines some score for the size and number of connected
+            # components in a line
+            connected_components = self.count_series(line, player)
+            score = 0
+            for size in connected_components:
+                if size == 2:
+                    score += 1
+                elif size == 3:
+                    score += 10
+                elif size >= 4:
+                    score += 100
+            return score
+
+        def get_diagonals(self):
+            if self.shape[0] > self.shape[1]:
+                largest_side = self.shape[0]
+            else:
+                largest_side = self.shape[1]
+            offset = largest_side * -1
+
+            diagonals = []
+            for i in range(offset, largest_side):
+                if len(np.diagonal(self, i)) >= 4:
+                    diagonals.append(np.diagonal(self, i))
+                    diagonals.append(np.diagonal(np.fliplr(self), i))
+            return diagonals
+
+        def connected_heuristic(self, player):
+            # A possible heuristic, going to have to implement a basic
+            # version in pure numpy
+            # Call count_series on all horizontal lines, all vertical lines
+            # and both diagonal lines that >= spaces
+            score = 0
+            for row in self:
+                score += self.calculate_score(row, player)
+
+            for col in self.T:
+                score += self.calculate_score(col, player)
+
+            for diag in self.get_diagonals():
+                score += self.calculate_score(diag, player)
+
+            return score
 
 
-    def unoccupied(self, board, row, col):
+    def evaluation_function(self, board):
         """
-        Given a space on the board, return if this space is empty or not
+        Given the current stat of the board, return the scalar value that
+        represents the evaluation function for the current player
 
         INPUTS:
         board - a numpy array containing the state of the board using the
@@ -65,33 +126,22 @@ class AIPlayer:
                 - spaces that are unoccupied are marked as 0
                 - spaces that are occupied by player 1 have a 1 in them
                 - spaces that are occupied by player 2 have a 2 in them
-        row - (int) the row position to check
-        col - (int) the col position to check
 
         RETURNS:
-        unoccupied - a bloean True if empty flase if filled
+        The utility value for the current board
         """
+        state = Board(board)
+        player = self.player_number
 
+        if player == 1:
+            opponent = 2
+        else:
+            opponent = 1
 
+        loss = state.connected_heuristic(player)
+        loss -= state.connected_heuristic(opponent)
 
-
-    def moves(self, board):
-        """
-        Given the current state of the board, return a list of moves
-
-        INPUTS:
-        board - a numpy array containing the state of the board using the
-                following encoding:
-                - the board maintains its same two dimensions
-                    - row 0 is the top of the board and so is
-                      the last row filled
-                - spaces that are unoccupied are marked as 0
-                - spaces that are occupied by player 1 have a 1 in them
-                - spaces that are occupied by player 2 have a 2 in them
-        RETURNS:
-        moves - a list of row, col spaces in which we can make a valid move
-        """
-
+        return loss
 
     def get_alpha_beta_move(self, board):
         """
@@ -113,6 +163,8 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+
+
         raise NotImplementedError('Whoops I don\'t know what to do')
 
     def get_expectimax_move(self, board):
@@ -139,29 +191,6 @@ class AIPlayer:
         raise NotImplementedError('Whoops I don\'t know what to do')
 
 
-
-
-    def evaluation_function(self, board):
-        """
-        Given the current stat of the board, return the scalar value that
-        represents the evaluation function for the current player
-
-        INPUTS:
-        board - a numpy array containing the state of the board using the
-                following encoding:
-                - the board maintains its same two dimensions
-                    - row 0 is the top of the board and so is
-                      the last row filled
-                - spaces that are unoccupied are marked as 0
-                - spaces that are occupied by player 1 have a 1 in them
-                - spaces that are occupied by player 2 have a 2 in them
-
-        RETURNS:
-        The utility value for the current board
-        """
-
-
-        return 0
 
 
 class RandomPlayer:
