@@ -211,6 +211,40 @@ class AIPlayer:
 
         return value
 
+    def max_exp_val(self, state, depth):
+        utility, winner = self.evaluation_function(state)
+        if winner:
+            print(f"Player {winner} has won")
+            return utility
+        if depth == 0:
+            print("Depth is 0")
+            return utility
+        v = -100000
+
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.player_number)
+            v = max(v, self.exp_value(new_state, depth-1))
+        return v
+
+    def exp_value(self, state, depth):
+        utility, winner = self.evaluation_function(state)
+        if winner:
+            print(f"Player {winner} has won")
+            return utility
+        if depth == 0:
+            print("Depth is 0")
+            return utility
+
+        v = 0
+        count = 0
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.opponent(self.player_number))
+            v += self.max_exp_val(new_state, depth-1)
+            count += 1
+
+        return v / count
+
+
     def get_alpha_beta_move(self, board):
         """
         Given the current state of the board, return the next move based on
@@ -252,9 +286,6 @@ class AIPlayer:
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
-    def expectimax_val(self, state, depth):
-
-
     def get_expectimax_move(self, board):
         """
         Given the current state of the board, return the next move based on
@@ -276,12 +307,24 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+        state = Board(board)
 
+        depth = 5
+        best_val = 0
+        # middle column
+        best_col = state.shape[1]//2
+        best_row = 0
 
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.player_number)
+            v = self.exp_value(new_state, depth)
+            if v > best_val:
+                best_val = v
+                best_col = col
+                best_row = row
+
+        return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
-
-
-
 
 class RandomPlayer:
     def __init__(self, player_number):
