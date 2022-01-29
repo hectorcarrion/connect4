@@ -170,7 +170,7 @@ class AIPlayer:
         if opponent_won:
             return loss, opponent #f"Winner is opponent: {opponent}"
 
-        return loss - loss_opponent, None
+        return loss, None
 
     def min_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
