@@ -69,11 +69,11 @@ class Board(np.ndarray):
 
         for size in connected_components:
             if size == 2:
-                score += 1
-            elif size == 3:
                 score += 10
-            elif size >= 4:
+            elif size == 3:
                 score += 100
+            elif size >= 4:
+                score += 10000
                 over = True
         return score, over
 
@@ -159,13 +159,12 @@ class AIPlayer:
         """
         #state = Board(board)
         player = self.player_number
-        print(player)
         opponent = self.opponent(player)
 
         loss_player, player_won = board.connected_heuristic(player)
         loss_opponent, opponent_won = board.connected_heuristic(opponent)
 
-        loss = loss_player - loss_opponent
+        loss = loss_player - (loss_opponent + 100)
         if player_won:
             return loss, player #f"Winner is player: {player}"
         if opponent_won:
