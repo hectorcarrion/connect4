@@ -159,6 +159,7 @@ class AIPlayer:
         """
         #state = Board(board)
         player = self.player_number
+        print(player)
         opponent = self.opponent(player)
 
         loss_player, player_won = board.connected_heuristic(player)
