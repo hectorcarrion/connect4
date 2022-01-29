@@ -161,8 +161,8 @@ class AIPlayer:
         player = self.player_number
         opponent = self.opponent(player)
 
-        loss_player, player_won = state.connected_heuristic(player)
-        loss_opponent, opponent_won = state.connected_heuristic(opponent)
+        loss_player, player_won = board.connected_heuristic(player)
+        loss_opponent, opponent_won = board.connected_heuristic(opponent)
 
         loss = loss_player - loss_opponent
         if player_won:
