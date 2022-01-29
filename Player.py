@@ -117,9 +117,10 @@ class Board(np.ndarray):
     def play(self, row, col, player):
         # play a disc at the specified row, color
         play_board = np.copy(self)
-        if play_board.owner_at(row, col) is None:
-            play_board[row][col] = player
-            return play_board
+        state = Board(play_board)
+        if state.owner_at(row, col) is None:
+            state[row][col] = player
+            return state
         else:
             raise Exception("Attempting to play at occupied space")
 
