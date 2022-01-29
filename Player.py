@@ -118,11 +118,14 @@ class Board(np.ndarray):
         # play a disc at the specified row, color
         play_board = np.copy(self)
         state = Board(play_board)
-        if state.owner_at(row, col) is None:
-            state[row][col] = player
-            return state
+        if (row, col) in self.possible_moves():
+            if state.owner_at(row, col) is None:
+                state[row][col] = player
+                return state
+            else:
+                raise Exception("Attempting to play at occupied space")
         else:
-            raise Exception("Attempting to play at occupied space")
+            raise Exception("Attemtpion to play non-possible move")
 
 class AIPlayer:
     def __init__(self, player_number):
