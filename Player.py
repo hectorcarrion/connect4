@@ -1,115 +1,141 @@
 import numpy as np
 
+class Board(np.ndarray):
+    """
+    A new board class that allows us to have nice methods into important
+    functionality wrapping the numpy class.
+    INPUTS:
+    board - a numpy array containing the state of the board using the
+            following encoding:
+            - the board maintains its same two dimensions
+                - row 0 is the top of the board and so is
+                  the last row filled
+            - spaces that are unoccupied are marked as 0
+            - spaces that are occupied by player 1 have a 1 in them
+            - spaces that are occupied by player 2 have a 2 in them
+    """
+
+    def __new__(cls, a):
+        obj = np.asarray(a).view(cls)
+        return obj
+
+    def owner_at(self, row, col):
+        # Given the encoding above
+        if self[row][col] == 0:
+            return None
+        elif self[row][col] == 1:
+            return "player_one"
+        elif self[row][col] == 2:
+            return "player_two"
+
+    def possible_moves(self):
+        possible_moves = []
+        # Iterates the boards columns from left to right
+        for col in range(self.shape[1]):
+            # Iterates the boards rows from bottom to top
+            for row in range(self.shape[0]-1, -1, -1):
+                # Check that this space has no owner
+                if self.owner_at(row, col) is None:
+                    possible_moves.append((row, col))
+                    # we break here because rows empty above this one
+                    # are not valid moves (cant place a disc on nothing)
+                    break
+        return possible_moves
+
+    def count_series(self, line, player):
+        # Counts the size and number of connected components in a board
+        count = 0
+        connected_magnitudes = []
+
+        for disc in line:
+            if disc != player:
+                if count <= 1:
+                    count = 0
+                else:
+                    connected_magnitudes.append(count)
+                    count = 0
+            else:
+                count += 1
+        if count > 1:
+            connected_magnitudes.append(count)
+        return connected_magnitudes
+
+    def calculate_score(self, line, player):
+        # Determines some score for the size and number of connected
+        # components in a line
+        connected_components = self.count_series(line, player)
+        score = 0
+        over = False
+
+        for size in connected_components:
+            if size == 2:
+                score += 1
+            elif size == 3:
+                score += 10
+            elif size >= 4:
+                score += 100
+                over = True
+        return score, over
+
+    def get_diagonals(self):
+        if self.shape[0] > self.shape[1]:
+            largest_side = self.shape[0]
+        else:
+            largest_side = self.shape[1]
+        offset = largest_side * -1
+
+        diagonals = []
+        for i in range(offset, largest_side):
+            if len(np.diagonal(self, i)) >= 4:
+                diagonals.append(np.diagonal(self, i))
+                diagonals.append(np.diagonal(np.fliplr(self), i))
+        return diagonals
+
+    def connected_heuristic(self, player):
+        # A possible heuristic, going to have to implement a basic
+        # version in pure numpy
+        # Call count_series on all horizontal lines, all vertical lines
+        # and both diagonal lines that >= spaces
+        total = 0
+        for row in self:
+            score, over_row = self.calculate_score(row, player)
+            total += score
+
+        for col in self.T:
+            score, over_col = self.calculate_score(col, player)
+            total += score
+
+        for diag in self.get_diagonals():
+            score, over_diag = self.calculate_score(diag, player)
+            total += score
+
+        if over_row or over_col or over_diag:
+            return total, True
+        else:
+            return total, False
+
+    def play(self, row, col, player):
+        # play a disc at the specified row, color
+        play_board = np.copy(self)
+        if play_board.owner_at(row, col) is None:
+            play_board[row][col] = player
+            return play_board
+        else:
+            raise Exception("Attempting to play at occupied space")
+
 class AIPlayer:
     def __init__(self, player_number):
         self.player_number = player_number
         self.type = 'ai'
         self.player_string = 'Player {}:ai'.format(player_number)
 
-    class Board(np.ndarray):
-        """
-        A new board class that allows us to have nice methods into important
-        functionality wrapping the numpy class.
-        INPUTS:
-        board - a numpy array containing the state of the board using the
-                following encoding:
-                - the board maintains its same two dimensions
-                    - row 0 is the top of the board and so is
-                      the last row filled
-                - spaces that are unoccupied are marked as 0
-                - spaces that are occupied by player 1 have a 1 in them
-                - spaces that are occupied by player 2 have a 2 in them
-        """
 
-        def __new__(cls, a):
-            obj = np.asarray(a).view(cls)
-            return obj
-
-        def owner_at(self, row, col):
-            # Given the encoding above
-            if self[row][col] == 0:
-                return None
-            elif self[row][col] == 1:
-                return "player_one"
-            elif self[row][col] == 2:
-                return "player_two"
-
-        def possible_moves(self):
-            possible_moves = []
-            # Iterates the boards columns from left to right
-            for col in range(self.shape[1]):
-                # Iterates the boards rows from bottom to top
-                for row in range(self.shape[0]-1, -1, -1):
-                    # Check that this space has no owner
-                    if self.owner_at(row, col) is None:
-                        possible_moves.append((row, col))
-                        # we break here because rows empty above this one
-                        # are not valid moves (cant place a disc on nothing)
-                        break
-            return possible_moves
-
-        def count_series(self, line, player):
-            # Counts the size and number of connected components in a board
-            count = 0
-            connected_magnitudes = []
-
-            for disc in line:
-                if disc != player:
-                    if count <= 1:
-                        count = 0
-                    else:
-                        connected_magnitudes.append(count)
-                        count = 0
-                else:
-                    count += 1
-            if count > 1:
-                connected_magnitudes.append(count)
-            return connected_magnitudes
-
-        def calculate_score(self, line, player):
-            # Determines some score for the size and number of connected
-            # components in a line
-            connected_components = self.count_series(line, player)
-            score = 0
-            for size in connected_components:
-                if size == 2:
-                    score += 1
-                elif size == 3:
-                    score += 10
-                elif size >= 4:
-                    score += 100
-            return score
-
-        def get_diagonals(self):
-            if self.shape[0] > self.shape[1]:
-                largest_side = self.shape[0]
-            else:
-                largest_side = self.shape[1]
-            offset = largest_side * -1
-
-            diagonals = []
-            for i in range(offset, largest_side):
-                if len(np.diagonal(self, i)) >= 4:
-                    diagonals.append(np.diagonal(self, i))
-                    diagonals.append(np.diagonal(np.fliplr(self), i))
-            return diagonals
-
-        def connected_heuristic(self, player):
-            # A possible heuristic, going to have to implement a basic
-            # version in pure numpy
-            # Call count_series on all horizontal lines, all vertical lines
-            # and both diagonal lines that >= spaces
-            score = 0
-            for row in self:
-                score += self.calculate_score(row, player)
-
-            for col in self.T:
-                score += self.calculate_score(col, player)
-
-            for diag in self.get_diagonals():
-                score += self.calculate_score(diag, player)
-
-            return score
+    def opponent(self, player):
+        if player == 1:
+            opponent = 2
+        else:
+            opponent = 1
+        return opponent
 
 
     def evaluation_function(self, board):
@@ -130,18 +156,60 @@ class AIPlayer:
         RETURNS:
         The utility value for the current board
         """
-        state = Board(board)
+        #state = Board(board)
         player = self.player_number
+        opponent = self.opponent(player)
 
-        if player == 1:
-            opponent = 2
-        else:
-            opponent = 1
+        loss_player, player_won = state.connected_heuristic(player)
+        loss_opponent, opponent_won = state.connected_heuristic(opponent)
 
-        loss = state.connected_heuristic(player)
-        loss -= state.connected_heuristic(opponent)
+        loss = loss_player - loss_opponent
+        if player_won:
+            return loss, player #f"Winner is player: {player}"
+        if opponent_won:
+            return loss, opponent #f"Winner is opponent: {opponent}"
 
-        return loss
+        return loss - loss_opponent, None
+
+    def min_value(self, state, alpha, beta, depth):
+        utility, winner = self.evaluation_function(state)
+        if winner:
+            print(f"Player {winner} has won")
+            return utility
+        if depth == 0:
+            print("Depth is 0")
+            return utility
+
+        value = 100000
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.opponent(self.player_number))
+            value = min(value, self.max_value(new_state, alpha, beta, depth-1))
+            # pruning
+            if value <= alpha:
+                return value
+            beta = max(beta, value)
+
+        return value
+
+    def max_value(self, state, alpha, beta, depth):
+        utility, winner = self.evaluation_function(state)
+        if winner:
+            print(f"Player {winner} has won")
+            return utility
+        if depth == 0:
+            print("Depth is 0")
+            return utility
+
+        value = -100000
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.player_number)
+            value = max(value, self.min_value(new_state, alpha, beta, depth-1))
+            # prunning
+            if value >= beta:
+                return value
+            alpha = max(alpha, value)
+
+        return value
 
     def get_alpha_beta_move(self, board):
         """
@@ -163,9 +231,29 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+        state = Board(board)
 
+        alpha = -100000
+        beta  =  100000
+        depth = 5
+        best_val = 0
+        # middle column
+        best_col = state.shape[1]//2
+        best_row = 0
 
+        for row, col in state.possible_moves():
+            new_state = state.play(row, col, self.player_number)
+            v = self.min_value(new_state, alpha, beta, depth)
+            if v > best_val:
+                best_val = v
+                best_col = col
+                best_row = row
+
+        return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
+
+    def expectimax_val(self, state, depth):
+
 
     def get_expectimax_move(self, board):
         """
@@ -188,6 +276,8 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+
+
         raise NotImplementedError('Whoops I don\'t know what to do')
 
 
