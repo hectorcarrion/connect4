@@ -1,5 +1,4 @@
 import numpy as np
-import random
 
 class Board(np.ndarray):
     """
@@ -207,7 +206,7 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        value = 1000000
+        value = float('inf')
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.opponent(self.player_number))
             value = min(value, self.max_value(new_state, alpha, beta, depth-1))
@@ -228,7 +227,7 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        value = -1000000
+        value = float('-inf')
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
             value = max(value, self.min_value(new_state, alpha, beta, depth-1))
@@ -247,7 +246,7 @@ class AIPlayer:
         if depth == 0:
             #print("Depth is 0")
             return utility
-        v = -100000
+        v = float('-inf')
 
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
@@ -300,7 +299,7 @@ class AIPlayer:
         depth = 5
         best_val = 0
         # random col thats avail
-        best_col = random.choice(state.possible_moves())[1]
+        best_col = np.random.choice(state.possible_moves())[1]
         best_row = 0
 
         for row, col in state.possible_moves():
