@@ -178,7 +178,7 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        dynamic = False
+        dynamic = True
 
         if dynamic:
             if player == 1:
@@ -203,10 +203,10 @@ class AIPlayer:
 
         if opponent_won:
             # print(f"I am {player}, opponent won, loss is {loss}")
-            return float('-inf'), opponent #f"Winner is opponent: {opponent}"
+            return loss, opponent #f"Winner is opponent: {opponent}"
         if player_won:
             # print(f"I am {player}, I won and loss is {loss}")
-            return float('inf'), player #f"Winner is player: {player}"
+            return loss, player #f"Winner is player: {player}"
 
         return loss, None
 
