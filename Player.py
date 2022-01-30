@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 class Board(np.ndarray):
     """
@@ -118,14 +119,11 @@ class Board(np.ndarray):
         # play a disc at the specified row, color
         play_board = np.copy(self)
         state = Board(play_board)
-        if (row, col) in self.possible_moves():
-            if state.owner_at(row, col) is None:
-                state[row][col] = player
-                return state
-            else:
-                raise Exception("Attempting to play at occupied space")
+        if state.owner_at(row, col) is None:
+            state[row][col] = player
+            return state
         else:
-            raise Exception("Attemtpion to play non-possible move")
+            raise Exception("Attempting to play at occupied space")
 
 class AIPlayer:
     def __init__(self, player_number):
@@ -166,6 +164,8 @@ class AIPlayer:
 
         loss_player, player_won = board.connected_heuristic(player)
         loss_opponent, opponent_won = board.connected_heuristic(opponent)
+        print(f"Player {player} loss: {loss_player}")
+        print(f"Opponent {opponent} loss: {loss_opponent}")
 
         loss = loss_player - (loss_opponent + 100)
         if player_won:
@@ -275,8 +275,8 @@ class AIPlayer:
         beta  =  100000
         depth = 5
         best_val = 0
-        # middle column
-        best_col = state.shape[1]//2
+        # random col thats avail
+        best_col = random.choice(state.possible_moves())[1]
         best_row = 0
 
         for row, col in state.possible_moves():
@@ -287,6 +287,7 @@ class AIPlayer:
                 best_col = col
                 best_row = row
 
+        # make sure this is unoccupied before picking it (could be 3 still)
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
