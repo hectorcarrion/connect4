@@ -191,9 +191,9 @@ class AIPlayer:
             loss = loss_player - (loss_opponent * 3)# encourage defensive play
 
         if opponent_won:
-            return -1000000, opponent #f"Winner is opponent: {opponent}"
+            return -100000, opponent #f"Winner is opponent: {opponent}"
         if player_won:
-            return  1000000, player #f"Winner is player: {player}"
+            return  100000, player #f"Winner is player: {player}"
 
         return loss, None
 
@@ -207,7 +207,7 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        value = 100000
+        value = 1000000
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.opponent(self.player_number))
             value = min(value, self.max_value(new_state, alpha, beta, depth-1))
@@ -228,7 +228,7 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        value = -100000
+        value = -1000000
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
             value = max(value, self.min_value(new_state, alpha, beta, depth-1))
