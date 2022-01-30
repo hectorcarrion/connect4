@@ -127,7 +127,7 @@ class Board(np.ndarray):
             return total, False
 
     def play(self, row, col, player):
-        # play a disc at the specified row, color
+        # play a disc at the specified row, col
         play_board = np.copy(self)
         state = Board(play_board)
         if state.owner_at(row, col) is None:
@@ -178,7 +178,7 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        dynamic = True
+        dynamic = False
 
         if dynamic:
             if player == 1:
