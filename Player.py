@@ -200,7 +200,7 @@ class AIPlayer:
     def min_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Min call - player {winner} has won at state:")
+            print(f"Min call - player {winner} will win at state:")
             print(state)
             return utility
         if depth == 0:
@@ -221,7 +221,7 @@ class AIPlayer:
     def max_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Max call - player {winner} has won at state:")
+            print(f"Max call - player {winner} will win at state:")
             print(state)
             return utility
         if depth == 0:
