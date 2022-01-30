@@ -167,7 +167,8 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        dynamic = True
+        dynamic = False
+        
         if dynamic:
             if player == 1:
                 balanced = False
@@ -185,9 +186,9 @@ class AIPlayer:
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
-            loss = loss_player - (loss_opponent - 1000) #encourage offensive play
+            loss = loss_player - (loss_opponent - 100) #encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent + 1000) #encourage defensive play
+            loss = loss_player - (loss_opponent + 100) #encourage defensive play
 
         if player_won:
             return loss, player #f"Winner is player: {player}"
