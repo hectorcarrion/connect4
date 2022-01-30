@@ -199,7 +199,7 @@ class AIPlayer:
         elif offensive:
             loss = loss_player - (loss_opponent / 2)# encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent * 11)# encourage defensive play
+            loss = loss_player - (loss_opponent * 101)# encourage defensive play
 
         if opponent_won:
             print(f"I am {player}, opponent won, loss is {loss}")
