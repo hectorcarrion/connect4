@@ -174,7 +174,7 @@ class AIPlayer:
             loss = loss_player - loss_opponent
         elif offensive:
             loss = loss_player - (loss_opponent - 100) #encourage offensive play
-        elif:
+        else:
             loss = loss_player - (loss_opponent + 100) #encourage defensive play
 
         if player_won:
