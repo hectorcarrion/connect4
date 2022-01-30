@@ -171,10 +171,12 @@ class AIPlayer:
 
         if dynamic:
             if player == 1:
+                print("playing offensive")
                 balanced = False
                 offensive = True
                 defensive = False
             elif player == 2:
+                print("playing defensive")
                 balanced = False
                 offensive = False
                 defensive = True
