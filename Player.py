@@ -316,7 +316,7 @@ class AIPlayer:
                 best_col = col
                 best_row = row
 
-        print(f"Player {self.player_number} picked play at {best_col}")
+        print(f"Player {self.player_number} picked play at column: {best_col}")
         end = time.time()
         print(f"Time to exectue at depth {depth}: {end - start}s")
         return best_col
