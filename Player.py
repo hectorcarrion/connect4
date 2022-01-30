@@ -167,8 +167,22 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        balanced = True
-        offensive = False
+        dynamic = True
+
+        if dynamic:
+            if player == 1:
+                balanced = False
+                offensive = True
+                defensive = False
+            elif player == 2:
+                balanced = False
+                offensive = False
+                defensive = True
+
+        else:
+            balanced = True
+            offensive = False
+            defensive = False
 
         if balanced:
             loss = loss_player - loss_opponent
