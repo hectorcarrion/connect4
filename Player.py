@@ -168,19 +168,15 @@ class AIPlayer:
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
         dynamic = True
-
         if dynamic:
             if player == 1:
-                print("playing offensive")
                 balanced = False
                 offensive = True
                 defensive = False
             elif player == 2:
-                print("playing defensive")
                 balanced = False
                 offensive = False
                 defensive = True
-
         else:
             balanced = True
             offensive = False
@@ -189,9 +185,9 @@ class AIPlayer:
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
-            loss = loss_player - (loss_opponent - 100) #encourage offensive play
-        else:
-            loss = loss_player - (loss_opponent + 100) #encourage defensive play
+            loss = loss_player - (loss_opponent - 1000) #encourage offensive play
+        elif defensive:
+            loss = loss_player - (loss_opponent + 1000) #encourage defensive play
 
         if player_won:
             return loss, player #f"Winner is player: {player}"
@@ -298,7 +294,7 @@ class AIPlayer:
 
         alpha = -100000
         beta  =  100000
-        depth = 5
+        depth = 10
         best_val = 0
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
