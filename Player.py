@@ -164,10 +164,15 @@ class AIPlayer:
 
         loss_player, player_won = board.connected_heuristic(player)
         loss_opponent, opponent_won = board.connected_heuristic(opponent)
-        print(f"Player {player} loss: {loss_player}")
-        print(f"Opponent {opponent} loss: {loss_opponent}")
+        # print(f"Player {player} loss: {loss_player}")
+        # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        loss = loss_player - (loss_opponent + 100)
+        offensive = True
+
+        if offensive:
+            loss = loss_player - (loss_opponent - 100) #encourage offensive play
+        else:
+            loss = loss_player - (loss_opponent + 100) #encourage defensive play
         if player_won:
             return loss, player #f"Winner is player: {player}"
         if opponent_won:
@@ -178,10 +183,10 @@ class AIPlayer:
     def min_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            #print(f"Player {winner} has won")
             return utility
         if depth == 0:
-            print("Depth is 0")
+            #print("Depth is 0")
             return utility
 
         value = 100000
@@ -198,10 +203,10 @@ class AIPlayer:
     def max_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            #print(f"Player {winner} has won")
             return utility
         if depth == 0:
-            print("Depth is 0")
+            #print("Depth is 0")
             return utility
 
         value = -100000
@@ -218,10 +223,10 @@ class AIPlayer:
     def max_exp_val(self, state, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            #print(f"Player {winner} has won")
             return utility
         if depth == 0:
-            print("Depth is 0")
+            #print("Depth is 0")
             return utility
         v = -100000
 
@@ -283,11 +288,12 @@ class AIPlayer:
             new_state = state.play(row, col, self.player_number)
             v = self.min_value(new_state, alpha, beta, depth)
             if v > best_val:
+                print(f"found good play at {col}")
                 best_val = v
                 best_col = col
                 best_row = row
 
-        # make sure this is unoccupied before picking it (could be 3 still)
+        print(f"chose play at {col}")
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
