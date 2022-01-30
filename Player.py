@@ -294,7 +294,7 @@ class AIPlayer:
 
         alpha = -100000
         beta  =  100000
-        depth = 6
+        depth = 5
         best_val = 0
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
