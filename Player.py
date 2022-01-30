@@ -311,7 +311,7 @@ class AIPlayer:
 
         alpha = float('-inf')
         beta  = float('inf')
-        depth = 5
+        depth = 10
         best_val = 0
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
