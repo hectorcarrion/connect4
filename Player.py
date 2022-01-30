@@ -186,9 +186,9 @@ class AIPlayer:
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
-            loss = loss_player - (loss_opponent / 4)# encourage offensive play
+            loss = loss_player - (loss_opponent / 3)# encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent * 4)# encourage defensive play
+            loss = loss_player - (loss_opponent * 3)# encourage defensive play
 
         if player_won:
             return loss, player #f"Winner is player: {player}"
@@ -200,7 +200,8 @@ class AIPlayer:
     def min_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            print(f"Min call - player {winner} has won at state:")
+            print(state)
             return utility
         if depth == 0:
             #print("Depth is 0")
@@ -220,7 +221,8 @@ class AIPlayer:
     def max_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            print(f"Max call - player {winner} has won at state:")
+            print(state)
             return utility
         if depth == 0:
             #print("Depth is 0")
