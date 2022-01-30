@@ -71,11 +71,11 @@ class Board(np.ndarray):
 
         for size in connected_components:
             if size == 2:
-                score += 10
+                score += 1
             elif size == 3:
-                score += 100
+                score += 10
             elif size >= 4:
-                score += 10000
+                score += 100
                 over = True
         return score, over
 
@@ -197,9 +197,9 @@ class AIPlayer:
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
-            loss = loss_player - (loss_opponent / 3)# encourage offensive play
+            loss = loss_player - (loss_opponent / 2)# encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent * 3)# encourage defensive play
+            loss = loss_player - (loss_opponent * 11)# encourage defensive play
 
         if opponent_won:
             print(f"I am {player}, opponent won, loss is {loss}")
@@ -319,10 +319,10 @@ class AIPlayer:
 
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
-            v = self.min_value(new_state, alpha, beta, depth)
-            if v > best_val:
+            state_value = self.min_value(new_state, alpha, beta, depth)
+            if state_value > best_val:
                 # print(f"Player {self.player_number} found good play at {col}")
-                best_val = v
+                best_val = state_value
                 best_col = col
                 best_row = row
 
