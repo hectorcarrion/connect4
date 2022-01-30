@@ -214,7 +214,7 @@ class AIPlayer:
             # pruning
             if value <= alpha:
                 return value
-            beta = max(beta, value)
+            beta = min(beta, value)
 
         return value
 
