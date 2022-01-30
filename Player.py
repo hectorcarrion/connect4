@@ -191,9 +191,9 @@ class AIPlayer:
             loss = loss_player - (loss_opponent * 3)# encourage defensive play
 
         if opponent_won:
-            return loss, opponent #f"Winner is opponent: {opponent}"
+            return -1000000, opponent #f"Winner is opponent: {opponent}"
         if player_won:
-            return loss, player #f"Winner is player: {player}"
+            return  1000000, player #f"Winner is player: {player}"
 
         return loss, None
 
