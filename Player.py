@@ -202,10 +202,10 @@ class AIPlayer:
             loss = loss_player - (loss_opponent * 2)# encourage defensive play
 
         if opponent_won:
-            print(f"I am {player}, opponent won, loss is {loss}")
+            print(f"I am {player}, opponent won, utility is {loss}")
             return loss, opponent #f"Winner is opponent: {opponent}"
         if player_won:
-            print(f"I am {player}, I won and loss is {loss}")
+            print(f"I am {player}, I won and utility is {loss}")
             return loss, player #f"Winner is player: {player}"
 
         return loss, None
@@ -311,7 +311,7 @@ class AIPlayer:
 
         alpha = float('-inf')
         beta  = float('inf')
-        depth = 6
+        depth = 5
         best_val = float('-inf')
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
