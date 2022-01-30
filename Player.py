@@ -295,8 +295,8 @@ class AIPlayer:
         """
         state = Board(board)
 
-        alpha = -9999999999
-        beta  =  9999999999
+        alpha = float('-inf')
+        beta  = float('inf')
         depth = 6
         best_val = 0
         # random col thats avail
