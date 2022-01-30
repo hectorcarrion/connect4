@@ -203,10 +203,10 @@ class AIPlayer:
 
         if opponent_won:
             # print(f"I am {player}, opponent won, loss is {loss}")
-            return loss, opponent #f"Winner is opponent: {opponent}"
+            return float('-inf'), opponent #f"Winner is opponent: {opponent}"
         if player_won:
             # print(f"I am {player}, I won and loss is {loss}")
-            return loss, player #f"Winner is player: {player}"
+            return float('inf'), player #f"Winner is player: {player}"
 
         return loss, None
 
