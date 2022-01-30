@@ -99,16 +99,26 @@ class Board(np.ndarray):
         # Call count_series on all horizontal lines, all vertical lines
         # and both diagonal lines that >= spaces
         total = 0
+        over_col = False
+        over_row = False
+        over_diag = False
+
         for row in self:
-            score, over_row = self.calculate_score(row, player)
+            score, over = self.calculate_score(row, player)
+            if over:
+                over_row = True
             total += score
 
         for col in self.T:
-            score, over_col = self.calculate_score(col, player)
+            score, over = self.calculate_score(col, player)
+            if over:
+                over_col = True
             total += score
 
         for diag in self.get_diagonals():
-            score, over_diag = self.calculate_score(diag, player)
+            score, over = self.calculate_score(diag, player)
+            if over:
+                over_diag = True
             total += score
 
         if over_row or over_col or over_diag:
@@ -192,10 +202,10 @@ class AIPlayer:
             loss = loss_player - (loss_opponent * 3)# encourage defensive play
 
         if opponent_won:
-            print(f"Opponent won, loss is {loss}")
+            print(f"I am {player}, opponent won, loss is {loss}")
             return loss, opponent #f"Winner is opponent: {opponent}"
         if player_won:
-            print(f"I won, loss is {loss}")
+            print(f"I am {player}, I won and loss is {loss}")
             return loss, player #f"Winner is player: {player}"
 
         return loss, None
