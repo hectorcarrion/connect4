@@ -199,7 +199,7 @@ class AIPlayer:
         elif offensive:
             loss = loss_player - (loss_opponent / 2)# encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent * 4)# encourage defensive play
+            loss = loss_player - (loss_opponent * 2)# encourage defensive play
 
         if opponent_won:
             print(f"I am {player}, opponent won, loss is {loss}")
@@ -311,7 +311,7 @@ class AIPlayer:
 
         alpha = float('-inf')
         beta  = float('inf')
-        depth = 5
+        depth = 6
         best_val = float('-inf')
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
