@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import time
 
 class Board(np.ndarray):
     """
@@ -295,6 +296,7 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+        start = time.time()
         state = Board(board)
 
         alpha = float('-inf')
@@ -315,6 +317,8 @@ class AIPlayer:
                 best_row = row
 
         print(f"Player {self.player_number} picked play at {best_col}")
+        end = time.time()
+        print(f"Time to exectue at depth {depth}: {end - start}s")
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
