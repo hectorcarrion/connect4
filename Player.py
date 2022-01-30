@@ -167,10 +167,14 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        offensive = True
-        if offensive:
+        balanced = True
+        offensive = False
+        
+        if balanced:
+            loss = loss_player - loss_opponent
+        elif offensive:
             loss = loss_player - (loss_opponent - 100) #encourage offensive play
-        else:
+        elif:
             loss = loss_player - (loss_opponent + 100) #encourage defensive play
 
         if player_won:
@@ -288,7 +292,7 @@ class AIPlayer:
             new_state = state.play(row, col, self.player_number)
             v = self.min_value(new_state, alpha, beta, depth)
             if v > best_val:
-                print(f"Player {self.player_number} found good play at {col}")
+                # print(f"Player {self.player_number} found good play at {col}")
                 best_val = v
                 best_col = col
                 best_row = row
