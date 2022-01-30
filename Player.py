@@ -178,7 +178,7 @@ class AIPlayer:
         # print(f"Player {player} loss: {loss_player}")
         # print(f"Opponent {opponent} loss: {loss_opponent}")
 
-        dynamic = False
+        dynamic = True
 
         if dynamic:
             if player == 1:
@@ -220,17 +220,16 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        v = float('inf')
+        value = float('inf')
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.opponent(self.player_number))
-            v2 = self.max_value(new_state, alpha, beta, depth-1)
-            if v2 < v:
-                v = v2
-                beta = min(beta, v)
+            value = min(value, self.max_value(new_state, alpha, beta, depth-1))
             # pruning
-            if v <= alpha:
-                return v
-        return v
+            if value <= alpha:
+                return value
+            beta = min(beta, value)
+
+        return value
 
     def max_value(self, state, alpha, beta, depth):
         utility, winner = self.evaluation_function(state)
@@ -242,18 +241,16 @@ class AIPlayer:
             #print("Depth is 0")
             return utility
 
-        v = float('-inf')
+        value = float('-inf')
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
-            v2 = self.min_value(new_state, alpha, beta, depth-1)
-            # as per the book page 307
-            if v2 > v:
-                v = v2
-                alpha = max(alpha, v)
+            value = max(value, self.min_value(new_state, alpha, beta, depth-1))
             # prunning
-            if v >= beta:
-                return v
-        return v
+            if value >= beta:
+                return value
+            alpha = max(alpha, value)
+
+        return value
 
     def max_exp_val(self, state, depth):
         utility, winner = self.evaluation_function(state)
