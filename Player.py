@@ -299,7 +299,7 @@ class AIPlayer:
         depth = 6
         best_val = 0
         # random col thats avail
-        best_col = np.random.choice(state.possible_moves())[1]
+        best_col = random.choice(state.possible_moves())[1]
         best_row = 0
 
         for row, col in state.possible_moves():
