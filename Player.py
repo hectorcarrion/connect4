@@ -186,9 +186,9 @@ class AIPlayer:
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
-            loss = loss_player - (loss_opponent - 500) #encourage offensive play
+            loss = loss_player - (loss_opponent / 10)# encourage offensive play
         elif defensive:
-            loss = loss_player - (loss_opponent + 500) #encourage defensive play
+            loss = loss_player - (loss_opponent * 10)# encourage defensive play
 
         if player_won:
             return loss, player #f"Winner is player: {player}"
