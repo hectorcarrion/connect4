@@ -169,7 +169,7 @@ class AIPlayer:
 
         balanced = True
         offensive = False
-        
+
         if balanced:
             loss = loss_player - loss_opponent
         elif offensive:
@@ -297,7 +297,7 @@ class AIPlayer:
                 best_col = col
                 best_row = row
 
-        print(f"Player {self.player_number} picked best play at {best_col}")
+        print(f"Player {self.player_number} picked play at {best_col}")
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
