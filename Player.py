@@ -191,9 +191,11 @@ class AIPlayer:
             loss = loss_player - (loss_opponent * 3)# encourage defensive play
 
         if opponent_won:
-            return -100000, opponent #f"Winner is opponent: {opponent}"
+            print(f"Opponent won, loss is {loss}")
+            return loss, opponent #f"Winner is opponent: {opponent}"
         if player_won:
-            return 100000, player #f"Winner is player: {player}"
+            print(f"I won, loss is {loss}")
+            return loss, player #f"Winner is player: {player}"
 
         return loss, None
 
@@ -201,7 +203,6 @@ class AIPlayer:
         utility, winner = self.evaluation_function(state)
         if winner:
             print(f"Min call - player {winner} will win at state:")
-            print(f"I am player {self.player_number}")
             print(state)
             return utility
         if depth == 0:
@@ -223,7 +224,6 @@ class AIPlayer:
         utility, winner = self.evaluation_function(state)
         if winner:
             print(f"Max call - player {winner} will win at state:")
-            print(f"I am player {self.player_number}")
             print(state)
             return utility
         if depth == 0:
