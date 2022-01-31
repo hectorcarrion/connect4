@@ -309,6 +309,7 @@ class AIPlayer:
         The 0 based index of the column that represents the next move
         """
         start = time.time()
+        print("Thinking...")
         state = Board(board)
 
         alpha = float('-inf')
@@ -356,6 +357,7 @@ class AIPlayer:
         The 0 based index of the column that represents the next move
         """
         start = time.time()
+        print("Thinking...")
         state = Board(board)
 
         depth = 4
@@ -372,7 +374,7 @@ class AIPlayer:
                 best_col = col
                 best_row = row
 
-        rprint(f"Player {self.player_number} picked play at column: {best_col}")
+        print(f"Player {self.player_number} picked play at column: {best_col}")
         end = time.time()
         print(f"Time to exectue at depth {depth}: {end - start}s")
         return best_col
