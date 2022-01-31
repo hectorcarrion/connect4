@@ -311,6 +311,8 @@ class AIPlayer:
         start = time.time()
         print("Thinking...")
         state = Board(board)
+        if len(state.possible_moves()) == 0:
+            raise Exception("The board is full, cannot move any longer")
 
         alpha = float('-inf')
         beta  = float('inf')
@@ -359,6 +361,8 @@ class AIPlayer:
         start = time.time()
         print("Thinking...")
         state = Board(board)
+        if len(state.possible_moves()) == 0:
+            raise Exception("The board is full, cannot move any longer")
 
         depth = 4
         best_val = float('-inf')
