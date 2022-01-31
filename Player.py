@@ -255,13 +255,14 @@ class AIPlayer:
     def max_exp_val(self, state, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            print(f"Max exp call - player {winner} will win at state:")
+            print(state)
             return utility
         if depth == 0:
             #print("Depth is 0")
             return utility
-        v = float('-inf')
 
+        v = float('-inf')
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
             v = max(v, self.exp_value(new_state, depth-1))
@@ -270,10 +271,11 @@ class AIPlayer:
     def exp_value(self, state, depth):
         utility, winner = self.evaluation_function(state)
         if winner:
-            print(f"Player {winner} has won")
+            print(f"Exp value call - player {winner} will win at state:")
+            print(state)
             return utility
         if depth == 0:
-            print("Depth is 0")
+            #print("Depth is 0")
             return utility
 
         v = 0
@@ -353,22 +355,26 @@ class AIPlayer:
         RETURNS:
         The 0 based index of the column that represents the next move
         """
+        start = time.time()
         state = Board(board)
 
-        depth = 5
-        best_val = 0
-        # middle column
-        best_col = state.shape[1]//2
+        depth = 4
+        best_val = float('-inf')
+        # random col thats avail
+        best_col = random.choice(state.possible_moves())[1]
         best_row = 0
 
         for row, col in state.possible_moves():
             new_state = state.play(row, col, self.player_number)
-            v = self.exp_value(new_state, depth)
-            if v > best_val:
-                best_val = v
+            state_value = self.exp_value(new_state, depth)
+            if state_value > best_val:
+                best_val = state_value
                 best_col = col
                 best_row = row
 
+        rprint(f"Player {self.player_number} picked play at column: {best_col}")
+        end = time.time()
+        print(f"Time to exectue at depth {depth}: {end - start}s")
         return best_col
         raise NotImplementedError('Whoops I don\'t know what to do')
 
