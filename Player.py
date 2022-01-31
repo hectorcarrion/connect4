@@ -316,7 +316,7 @@ class AIPlayer:
 
         alpha = float('-inf')
         beta  = float('inf')
-        depth = 4
+        depth = 5
         best_val = float('-inf')
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
@@ -364,7 +364,7 @@ class AIPlayer:
         if len(state.possible_moves()) == 0:
             raise Exception("The board is full, cannot move any longer")
 
-        depth = 4
+        depth = 5
         best_val = float('-inf')
         # random col thats avail
         best_col = random.choice(state.possible_moves())[1]
